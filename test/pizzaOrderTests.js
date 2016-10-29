@@ -30,7 +30,7 @@ suite('pizza tests', function () {
 
         suite('when client order at birthday', function () {
 
-            var order = [{name: 'meat pizza'}];
+            var order = [{name: 'meat pizza', price: 500}];
 
             test('client get free sweet pizza at birthday', function () {
                 var clientStub = {isBirthday: true};
@@ -52,6 +52,31 @@ suite('pizza tests', function () {
 
                 let hasFreePizza = outcome.items.indexOf('sweet pizza') != -1;
                 assert.equal(false, hasFreePizza);
+            });
+        });
+
+        suite('when client has promocode', function () {
+
+            var order = [{name: 'meat pizza', price: 500}];
+
+            test('when client has promocode ABCD he get discound 100 roubles', function () {
+                var clientStub = {promocode: 'ABCD'};
+
+                var pizzaOrder = new PizzaOrderCalculator();
+
+                var outcome = pizzaOrder.order(clientStub, order);
+
+                assert.equal(500 - 100, outcome.totalPrice);
+            });
+
+            test('when client has incorrect promocode', function () {
+                var clientStub = {promocode: 'AAAAA'};
+
+                var pizzaOrder = new PizzaOrderCalculator();
+
+                var outcome = pizzaOrder.order(clientStub, order);
+
+                assert.equal(500, outcome.totalPrice);
             });
         });
 

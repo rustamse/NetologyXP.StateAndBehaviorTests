@@ -13,13 +13,18 @@ export class PizzaOrderCalculator {
 
     order(client, orderItems) {
 
-        let outcome = {items: []};
+        let outcome = {items: [], totalPrice: 0};
         for (let i = 0; i < orderItems.length; i++) {
-            outcome.items.push(orderItems[i].name);
+            let item = orderItems[i];
+            outcome.items.push(item.name);
+            outcome.totalPrice += item.price;
         }
 
         if (client.isBirthday)
             outcome.items.push('sweet pizza');
+
+        if (client.promocode == 'ABCD')
+            outcome.totalPrice -= 100;
 
         return outcome;
     }
