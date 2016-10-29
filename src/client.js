@@ -4,11 +4,11 @@ export class Client {
     constructor() {
     }
 
-    isBirthday() {
+    get isBirthday() {
         return true;
     }
 
-    promocode() {
+    get promocode() {
         return 'ABCD';
     }
 }
