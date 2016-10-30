@@ -2,6 +2,7 @@
 
 export class Client {
     constructor() {
+        this.bonusPoints = 0;
     }
 
     get isBirthday() {

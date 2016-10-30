@@ -33,7 +33,9 @@ suite('pizza tests', function () {
             var order = {items: [{name: 'meat pizza', price: 500}]};
 
             test('client get free sweet pizza at birthday', function () {
-                var clientStub = {isBirthday: true};
+                var clientStub = {
+                    isBirthday: true
+                };
 
                 var pizzaOrder = new PizzaOrderCalculator();
 
@@ -44,7 +46,9 @@ suite('pizza tests', function () {
             });
 
             test('client NOT get free sweet pizza at NON-birthday', function () {
-                var clientStub = {isBirthday: false};
+                var clientStub = {
+                    isBirthday: false
+                };
 
                 var pizzaOrder = new PizzaOrderCalculator();
 
@@ -60,7 +64,9 @@ suite('pizza tests', function () {
             var order = {items: [{name: 'meat pizza', price: 500}]};
 
             test('when client has promocode ABCD he get discound 100 roubles', function () {
-                var clientStub = {promocode: 'ABCD'};
+                var clientStub = {
+                    promocode: 'ABCD'
+                };
 
                 var pizzaOrder = new PizzaOrderCalculator();
 
@@ -70,7 +76,9 @@ suite('pizza tests', function () {
             });
 
             test('when client has incorrect promocode', function () {
-                var clientStub = {promocode: 'AAAAA'};
+                var clientStub = {
+                    promocode: 'AAAAA'
+                };
 
                 var pizzaOrder = new PizzaOrderCalculator();
 
@@ -96,6 +104,23 @@ suite('pizza tests', function () {
                 var outcome = pizzaOrder.order(clientStub, order);
 
                 assert.equal((500 + 600) * 0.8, outcome.totalPrice);
+            });
+        });
+
+        suite('when order pizza client will get bonus points', function () {
+
+            var clientStub = {};
+            var order = {
+                items: [{name: 'meat pizza', price: 500}]
+            };
+
+            test('client get 5% of order as bonus points', function () {
+
+                var pizzaOrder = new PizzaOrderCalculator();
+
+                var outcome = pizzaOrder.order(clientStub, order);
+
+                assert.equal(500 * 0.05, outcome.bonusPoints);
             });
         });
 
