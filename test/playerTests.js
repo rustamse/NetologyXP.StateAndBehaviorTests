@@ -2,6 +2,7 @@ import assert from 'assert'
 import sinon from 'sinon'
 import {Bomb} from '../src/bomb'
 import {Player} from '../src/player'
+import {Match} from '../src/match'
 
 suite('Counter Strike Player tests', function () {
 
@@ -33,11 +34,12 @@ suite('Counter Strike Player tests', function () {
                 try {
                     player.plantBomb();
                 }
-                catch(ex){
+                catch (ex) {
                 }
 
                 bombMock.verify();
             });
         });
     });
+
 });
