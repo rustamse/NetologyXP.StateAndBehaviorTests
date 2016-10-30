@@ -16,7 +16,8 @@ export class PizzaOrderCalculator {
         let outcome = {
             items: [],
             totalPrice: 0,
-            bonusPoints: 0
+            bonusPoints: 0,
+            payMethod: ''
         };
 
         for (let i = 0; i < orderInfo.items.length; i++) {
@@ -35,6 +36,8 @@ export class PizzaOrderCalculator {
             outcome.totalPrice *= 0.8;
 
         outcome.bonusPoints = outcome.totalPrice * 0.05;
+
+        outcome.payMethod = orderInfo.payMethod;
 
         return outcome;
     }

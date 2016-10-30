@@ -30,7 +30,8 @@ suite('pizza tests', function () {
 
         suite('when client order at birthday', function () {
 
-            var order = {items: [{name: 'meat pizza', price: 500}]};
+            var order = {items: [{name: 'meat pizza', price: 500}],
+                payMethod: 'roubles'};
 
             test('client get free sweet pizza at birthday', function () {
                 var clientStub = {
@@ -61,7 +62,8 @@ suite('pizza tests', function () {
 
         suite('when client order using promocode', function () {
 
-            var order = {items: [{name: 'meat pizza', price: 500}]};
+            var order = {items: [{name: 'meat pizza', price: 500}],
+                payMethod: 'roubles'};
 
             test('when client has promocode ABCD he get discound 100 roubles', function () {
                 var clientStub = {
@@ -94,7 +96,8 @@ suite('pizza tests', function () {
             var orderHour = 13;
             var order = {
                 items: [{name: 'meat pizza', price: 500}, {name: 'chicken pizza', price: 600}],
-                time: orderHour
+                time: orderHour,
+                payMethod: 'roubles'
             };
 
             test('client get discount 20%', function () {
@@ -111,7 +114,8 @@ suite('pizza tests', function () {
 
             var clientStub = {};
             var order = {
-                items: [{name: 'meat pizza', price: 500}]
+                items: [{name: 'meat pizza', price: 500}],
+                payMethod: 'roubles'
             };
 
             test('client get 5% of order as bonus points', function () {
@@ -121,6 +125,42 @@ suite('pizza tests', function () {
                 var outcome = pizzaOrder.order(clientStub, order);
 
                 assert.equal(500 * 0.05, outcome.bonusPoints);
+            });
+        });
+
+        suite('client can order using bonusPoints', function () {
+
+            var clientStub = {};
+            var order = {
+                items: [{name: 'meat pizza', price: 500}],
+                payMethod: 'bonusPoints'
+            };
+
+            test('outcome payment method is bonusPoints', function () {
+
+                var pizzaOrder = new PizzaOrderCalculator();
+
+                var outcome = pizzaOrder.order(clientStub, order);
+
+                assert.equal('bonusPoints', outcome.payMethod);
+            });
+        });
+
+        suite('client can order using roubles', function () {
+
+            var clientStub = {};
+            var order = {
+                items: [{name: 'meat pizza', price: 500}],
+                payMethod: 'roubles'
+            };
+
+            test('outcome payment method is roubles', function () {
+
+                var pizzaOrder = new PizzaOrderCalculator();
+
+                var outcome = pizzaOrder.order(clientStub, order);
+
+                assert.equal('roubles', outcome.payMethod);
             });
         });
 
