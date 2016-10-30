@@ -5,7 +5,7 @@ export class PizzaOrderCalculator {
 
     };
 
-    order(client, orderInfo) {
+    formOrder(client, orderInfo) {
 
         let outcome = {
             items: [],

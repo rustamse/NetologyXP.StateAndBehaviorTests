@@ -5,116 +5,125 @@ import {PizzaOrderCalculator} from '../src/pizzaOrderCalculator'
 
 suite('PizzaOrderCalculator tests', function () {
 
-    suite('order pizza', function () {
+    suite('formOrder method', function () {
 
-        suite('when order by web', function () {
-
+        suite('check orderMethod', function () {
             var clientStub = {
                 isBirthday: false
             };
 
-            test('client order by web', function () {
-                var expectOrderMethod = 'web';
-                var order = {
-                    items: [{name: 'meat pizza', price: 500}],
-                    payMethod: 'roubles',
-                    orderMethod: expectOrderMethod
-                };
+            suite('when formOrder by web', function () {
+                test('order success created by web', function () {
+                    var expectOrderMethod = 'web';
+                    var orderInfo = {
+                        items: [{name: 'meat pizza', price: 500}],
+                        payMethod: 'roubles',
+                        orderMethod: expectOrderMethod
+                    };
 
-                var pizzaOrder = new PizzaOrderCalculator();
+                    var pizzaOrder = new PizzaOrderCalculator();
 
-                var outcome = pizzaOrder.order(clientStub, order);
+                    var order = pizzaOrder.formOrder(clientStub, orderInfo);
 
-                assert.equal(expectOrderMethod, outcome.orderMethod);
+                    assert.equal(expectOrderMethod, order.orderMethod);
+                });
             });
 
-            test('when client order by fax', function () {
-                var expectOrderMethod = 'fax';
-                var order = {
-                    items: [{name: 'meat pizza', price: 500}],
-                    payMethod: 'roubles',
-                    orderMethod: expectOrderMethod
-                };
+            suite('when formOrder by fax', function () {
+                test('order NOT created by fax', function () {
+                    var expectOrderMethod = 'fax';
+                    var orderInfo = {
+                        items: [{name: 'meat pizza', price: 500}],
+                        payMethod: 'roubles',
+                        orderMethod: expectOrderMethod
+                    };
 
-                var pizzaOrder = new PizzaOrderCalculator();
+                    var pizzaOrder = new PizzaOrderCalculator();
 
-                assert.throws(() => pizzaOrder.order(clientStub, order), /Order method not supported/);
+                    assert.throws(() => pizzaOrder.formOrder(clientStub, orderInfo), /Order method not supported/);
+                });
             });
         });
 
-        suite('when client order at birthday', function () {
-
-            var order = {
+        suite('check client birthday', function () {
+            var orderInfo = {
                 items: [{name: 'meat pizza', price: 500}],
                 payMethod: 'roubles',
                 orderMethod: 'web'
             };
 
-            test('client get free sweet pizza at birthday', function () {
-                var clientStub = {
-                    isBirthday: true
-                };
+            suite('when formOrder at client birthday', function () {
+                test('order contains free sweet pizza', function () {
+                    var clientStub = {
+                        isBirthday: true
+                    };
 
-                var pizzaOrder = new PizzaOrderCalculator();
+                    var pizzaOrder = new PizzaOrderCalculator();
 
-                var outcome = pizzaOrder.order(clientStub, order);
+                    var order = pizzaOrder.formOrder(clientStub, orderInfo);
 
-                let hasFreePizza = outcome.items.indexOf('sweet pizza') != -1;
-                assert.equal(true, hasFreePizza);
+                    let hasFreePizza = order.items.indexOf('sweet pizza') != -1;
+                    assert.equal(true, hasFreePizza);
+                });
             });
 
-            test('client NOT get free sweet pizza at NON-birthday', function () {
-                var clientStub = {
-                    isBirthday: false
-                };
+            suite('when formOrder at NON-client birthday', function () {
+                test('order NOT contains free sweet pizza', function () {
+                    var clientStub = {
+                        isBirthday: false
+                    };
 
-                var pizzaOrder = new PizzaOrderCalculator();
+                    var pizzaOrder = new PizzaOrderCalculator();
 
-                var outcome = pizzaOrder.order(clientStub, order);
+                    var order = pizzaOrder.formOrder(clientStub, orderInfo);
 
-                let hasFreePizza = outcome.items.indexOf('sweet pizza') != -1;
-                assert.equal(false, hasFreePizza);
+                    let hasFreePizza = order.items.indexOf('sweet pizza') != -1;
+                    assert.equal(false, hasFreePizza);
+                });
             });
         });
 
-        suite('when client order using promocode', function () {
-
-            var order = {
+        suite('when formOrder using client promocode', function () {
+            var orderInfo = {
                 items: [{name: 'meat pizza', price: 500}],
                 payMethod: 'roubles',
                 orderMethod: 'web'
             };
 
-            test('when client has promocode ABCD he get discound 100 roubles', function () {
-                var clientStub = {
-                    promocode: 'ABCD'
-                };
+            suite('when client has promocode ABCD', function () {
+                test('order totalPrice contains discound 100 roubles', function () {
+                    var clientStub = {
+                        promocode: 'ABCD'
+                    };
 
-                var pizzaOrder = new PizzaOrderCalculator();
+                    var pizzaOrder = new PizzaOrderCalculator();
 
-                var outcome = pizzaOrder.order(clientStub, order);
+                    var order = pizzaOrder.formOrder(clientStub, orderInfo);
 
-                assert.equal(500 - 100, outcome.totalPrice);
+                    assert.equal(500 - 100, order.totalPrice);
+                });
             });
 
-            test('when client has incorrect promocode', function () {
-                var clientStub = {
-                    promocode: 'AAAAA'
-                };
+            suite('when client has incorrect promocode', function () {
+                test('order totalPrice NOT contains discound', function () {
+                    var clientStub = {
+                        promocode: 'AAAAA'
+                    };
 
-                var pizzaOrder = new PizzaOrderCalculator();
+                    var pizzaOrder = new PizzaOrderCalculator();
 
-                var outcome = pizzaOrder.order(clientStub, order);
+                    var order = pizzaOrder.formOrder(clientStub, orderInfo);
 
-                assert.equal(500, outcome.totalPrice);
+                    assert.equal(500, order.totalPrice);
+                });
             });
         });
 
-        suite('when client order 2 pizzas from 10 to 16 hours', function () {
+        suite('when client formOrder 2 pizzas from 10 to 16 hours', function () {
 
             var clientStub = {};
             var orderHour = 13;
-            var order = {
+            var orderInfo = {
                 items: [{name: 'meat pizza', price: 500}, {name: 'chicken pizza', price: 600}],
                 time: orderHour,
                 payMethod: 'roubles',
@@ -125,83 +134,83 @@ suite('PizzaOrderCalculator tests', function () {
 
                 var pizzaOrder = new PizzaOrderCalculator();
 
-                var outcome = pizzaOrder.order(clientStub, order);
+                var order = pizzaOrder.formOrder(clientStub, orderInfo);
 
-                assert.equal((500 + 600) * 0.8, outcome.totalPrice);
+                assert.equal((500 + 600) * 0.8, order.totalPrice);
             });
         });
 
-        suite('when order pizza client will get bonus points', function () {
+        suite('when formOrder pizza order will contain bonus points', function () {
 
             var clientStub = {};
-            var order = {
+            var orderInfo = {
                 items: [{name: 'meat pizza', price: 500}],
                 payMethod: 'roubles',
                 orderMethod: 'web'
             };
 
-            test('client get 5% of order as bonus points', function () {
+            test('order contains 5% of pizza cost as bonus points', function () {
 
                 var pizzaOrder = new PizzaOrderCalculator();
 
-                var outcome = pizzaOrder.order(clientStub, order);
+                var order = pizzaOrder.formOrder(clientStub, orderInfo);
 
-                assert.equal(500 * 0.05, outcome.bonusPoints);
+                assert.equal(500 * 0.05, order.bonusPoints);
             });
         });
 
-        suite('client can order using bonusPoints', function () {
+        suite('when formOrder using bonusPoints', function () {
 
             var clientStub = {};
-            var order = {
+            var orderInfo = {
                 items: [{name: 'meat pizza', price: 500}],
                 payMethod: 'bonusPoints',
                 orderMethod: 'web'
             };
 
-            test('outcome payment method is bonusPoints', function () {
+            test('order payment method is bonusPoints', function () {
 
                 var pizzaOrder = new PizzaOrderCalculator();
 
-                var outcome = pizzaOrder.order(clientStub, order);
+                var order = pizzaOrder.formOrder(clientStub, orderInfo);
 
-                assert.equal('bonusPoints', outcome.payMethod);
+                assert.equal('bonusPoints', order.payMethod);
             });
         });
 
-        suite('client can order using roubles', function () {
+        suite('when formOrder using roubles', function () {
 
             var clientStub = {};
-            var order = {
+            var orderInfo = {
                 items: [{name: 'meat pizza', price: 500}],
                 payMethod: 'roubles',
                 orderMethod: 'web'
             };
 
-            test('outcome payment method is roubles', function () {
+            test('order payment method is roubles', function () {
 
                 var pizzaOrder = new PizzaOrderCalculator();
 
-                var outcome = pizzaOrder.order(clientStub, order);
+                var order = pizzaOrder.formOrder(clientStub, orderInfo);
 
-                assert.equal('roubles', outcome.payMethod);
+                assert.equal('roubles', order.payMethod);
             });
         });
 
-        suite('client can NOT order using dollars', function () {
+        suite('when formOrder using dollars', function () {
 
             var clientStub = {};
-            var order = {
+            var orderInfo = {
                 items: [{name: 'meat pizza', price: 500}],
                 payMethod: 'dollars',
                 orderMethod: 'web'
             };
 
-            test('outcome payment method is roubles', function () {
+            test('EXCEPTION when formOrder because payMethod not supported', function () {
 
                 var pizzaOrder = new PizzaOrderCalculator();
 
-                assert.throws(() => pizzaOrder.order(clientStub, order), /payMethod not supported/);
+                assert.throws(() => pizzaOrder.formOrder(clientStub, orderInfo), /payMethod not supported/);
             });
         });
 
