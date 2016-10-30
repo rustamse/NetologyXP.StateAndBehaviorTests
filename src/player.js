@@ -7,6 +7,10 @@ export class Player {
     }
 
     plantBomb() {
+        if(this._playerType != 'terrorist') {
+            throw new Error('Only terrorist can plant the bomb');
+        }
+
         this._bomb.plant();
     }
 }

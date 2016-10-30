@@ -8,14 +8,33 @@ suite('Counter Strike Player tests', function () {
     suite('when player plantBomb', function () {
         suite('when Terrorist plant bomb', function () {
             test('bomb is planting', function () {
-                var bomb = new Bomb();
-                var bombMock = sinon.mock(bomb);
+                let bomb = new Bomb();
+                let bombMock = sinon.mock(bomb);
                 bombMock.expects('plant')
                     .once();
 
-                var player = new Player('terrorist', bomb);
+                let player = new Player('terrorist', bomb);
 
                 player.plantBomb();
+
+                bombMock.verify();
+            });
+        });
+
+        suite('when Counter-Terrorist plant bomb', function () {
+            test('bomb is NOT planting', function () {
+                let bomb = new Bomb();
+                let bombMock = sinon.mock(bomb);
+                bombMock.expects('plant')
+                    .never();
+
+                let player = new Player('counter-terrorist', bomb);
+
+                try {
+                    player.plantBomb();
+                }
+                catch(ex){
+                }
 
                 bombMock.verify();
             });
