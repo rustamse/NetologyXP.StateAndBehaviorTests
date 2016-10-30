@@ -2,7 +2,8 @@
 
 export class Client {
     constructor() {
-        this.bonusPoints = 0;
+        this._bonusPoints = 0;
+        this._roubles = 0;
     }
 
     get isBirthday() {
@@ -11,5 +12,13 @@ export class Client {
 
     get promocode() {
         return 'ABCD';
+    }
+
+    get roubles() {
+        return this._roubles;
+    }
+
+    get bonusPoints() {
+        return this._bonusPoints;
     }
 }

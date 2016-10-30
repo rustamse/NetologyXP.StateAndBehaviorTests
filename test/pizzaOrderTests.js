@@ -30,8 +30,10 @@ suite('pizza tests', function () {
 
         suite('when client order at birthday', function () {
 
-            var order = {items: [{name: 'meat pizza', price: 500}],
-                payMethod: 'roubles'};
+            var order = {
+                items: [{name: 'meat pizza', price: 500}],
+                payMethod: 'roubles'
+            };
 
             test('client get free sweet pizza at birthday', function () {
                 var clientStub = {
@@ -62,8 +64,10 @@ suite('pizza tests', function () {
 
         suite('when client order using promocode', function () {
 
-            var order = {items: [{name: 'meat pizza', price: 500}],
-                payMethod: 'roubles'};
+            var order = {
+                items: [{name: 'meat pizza', price: 500}],
+                payMethod: 'roubles'
+            };
 
             test('when client has promocode ABCD he get discound 100 roubles', function () {
                 var clientStub = {
@@ -161,6 +165,22 @@ suite('pizza tests', function () {
                 var outcome = pizzaOrder.order(clientStub, order);
 
                 assert.equal('roubles', outcome.payMethod);
+            });
+        });
+
+        suite('client can NOT order using dollars', function () {
+
+            var clientStub = {};
+            var order = {
+                items: [{name: 'meat pizza', price: 500}],
+                payMethod: 'dollars'
+            };
+
+            test('outcome payment method is roubles', function () {
+
+                var pizzaOrder = new PizzaOrderCalculator();
+
+                assert.throws(() => pizzaOrder.order(clientStub, order), /payMethod not supported/);
             });
         });
 

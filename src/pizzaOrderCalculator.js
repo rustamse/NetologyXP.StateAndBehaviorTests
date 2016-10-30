@@ -37,6 +37,16 @@ export class PizzaOrderCalculator {
 
         outcome.bonusPoints = outcome.totalPrice * 0.05;
 
+        if (orderInfo.payMethod == "roubles") {
+
+        }
+        else if (orderInfo.payMethod == "bonusPoints") {
+
+        }
+        else {
+            throw new Error('payMethod not supported: ' + orderInfo.payMethod);
+        }
+
         outcome.payMethod = orderInfo.payMethod;
 
         return outcome;
