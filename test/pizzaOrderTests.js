@@ -3,36 +3,51 @@ import sinon from 'sinon'
 import {Client} from '../src/client'
 import {PizzaOrderCalculator} from '../src/pizzaOrderCalculator'
 
-suite('pizza tests', function () {
-
-    suite('pizza can be ordering', function () {
-        var clientStub = {};
-
-        test('client can order by web', function () {
-            var pizzaOrder = new PizzaOrderCalculator();
-
-            var canOrder = pizzaOrder.canOrder(clientStub, 'web');
-
-            assert.equal(true, canOrder);
-        });
-
-        test('client can NOT order by fax', function () {
-            var pizzaOrder = new PizzaOrderCalculator();
-
-            var canOrder = pizzaOrder.canOrder(clientStub, 'fax');
-
-            assert.equal(false, canOrder);
-        });
-
-    });
+suite('PizzaOrderCalculator tests', function () {
 
     suite('order pizza', function () {
+
+        suite('when order by web', function () {
+
+            var clientStub = {
+                isBirthday: false
+            };
+
+            test('client order by web', function () {
+                var expectOrderMethod = 'web';
+                var order = {
+                    items: [{name: 'meat pizza', price: 500}],
+                    payMethod: 'roubles',
+                    orderMethod: expectOrderMethod
+                };
+
+                var pizzaOrder = new PizzaOrderCalculator();
+
+                var outcome = pizzaOrder.order(clientStub, order);
+
+                assert.equal(expectOrderMethod, outcome.orderMethod);
+            });
+
+            test('when client order by fax', function () {
+                var expectOrderMethod = 'fax';
+                var order = {
+                    items: [{name: 'meat pizza', price: 500}],
+                    payMethod: 'roubles',
+                    orderMethod: expectOrderMethod
+                };
+
+                var pizzaOrder = new PizzaOrderCalculator();
+
+                assert.throws(() => pizzaOrder.order(clientStub, order), /Order method not supported/);
+            });
+        });
 
         suite('when client order at birthday', function () {
 
             var order = {
                 items: [{name: 'meat pizza', price: 500}],
-                payMethod: 'roubles'
+                payMethod: 'roubles',
+                orderMethod: 'web'
             };
 
             test('client get free sweet pizza at birthday', function () {
@@ -66,7 +81,8 @@ suite('pizza tests', function () {
 
             var order = {
                 items: [{name: 'meat pizza', price: 500}],
-                payMethod: 'roubles'
+                payMethod: 'roubles',
+                orderMethod: 'web'
             };
 
             test('when client has promocode ABCD he get discound 100 roubles', function () {
@@ -101,7 +117,8 @@ suite('pizza tests', function () {
             var order = {
                 items: [{name: 'meat pizza', price: 500}, {name: 'chicken pizza', price: 600}],
                 time: orderHour,
-                payMethod: 'roubles'
+                payMethod: 'roubles',
+                orderMethod: 'web'
             };
 
             test('client get discount 20%', function () {
@@ -119,7 +136,8 @@ suite('pizza tests', function () {
             var clientStub = {};
             var order = {
                 items: [{name: 'meat pizza', price: 500}],
-                payMethod: 'roubles'
+                payMethod: 'roubles',
+                orderMethod: 'web'
             };
 
             test('client get 5% of order as bonus points', function () {
@@ -137,7 +155,8 @@ suite('pizza tests', function () {
             var clientStub = {};
             var order = {
                 items: [{name: 'meat pizza', price: 500}],
-                payMethod: 'bonusPoints'
+                payMethod: 'bonusPoints',
+                orderMethod: 'web'
             };
 
             test('outcome payment method is bonusPoints', function () {
@@ -155,7 +174,8 @@ suite('pizza tests', function () {
             var clientStub = {};
             var order = {
                 items: [{name: 'meat pizza', price: 500}],
-                payMethod: 'roubles'
+                payMethod: 'roubles',
+                orderMethod: 'web'
             };
 
             test('outcome payment method is roubles', function () {
@@ -173,7 +193,8 @@ suite('pizza tests', function () {
             var clientStub = {};
             var order = {
                 items: [{name: 'meat pizza', price: 500}],
-                payMethod: 'dollars'
+                payMethod: 'dollars',
+                orderMethod: 'web'
             };
 
             test('outcome payment method is roubles', function () {

@@ -5,19 +5,14 @@ export class PizzaOrderCalculator {
 
     };
 
-    canOrder(client, orderMethod) {
-        if (orderMethod == 'web')
-            return true;
-        return false;
-    }
-
     order(client, orderInfo) {
 
         let outcome = {
             items: [],
             totalPrice: 0,
             bonusPoints: 0,
-            payMethod: ''
+            payMethod: '',
+            orderMethod: ''
         };
 
         for (let i = 0; i < orderInfo.items.length; i++) {
@@ -37,18 +32,33 @@ export class PizzaOrderCalculator {
 
         outcome.bonusPoints = outcome.totalPrice * 0.05;
 
-        if (orderInfo.payMethod == "roubles") {
+        this._checkOrderMethod(orderInfo);
+        outcome.orderMethod = orderInfo.orderMethod;
 
-        }
-        else if (orderInfo.payMethod == "bonusPoints") {
-
-        }
-        else {
-            throw new Error('payMethod not supported: ' + orderInfo.payMethod);
-        }
+        this._checkPayMethodAndMoney(orderInfo, client);
 
         outcome.payMethod = orderInfo.payMethod;
 
         return outcome;
+    }
+
+    _checkPayMethodAndMoney(orderInfo, client) {
+        if (orderInfo.payMethod == "roubles") {
+            if (client.roubles < orderInfo.totalPrice)
+                throw new Error('Not enough roubles');
+        }
+        else if (orderInfo.payMethod == "bonusPoints") {
+            if (client.bonusPoints < orderInfo.totalPrice)
+                throw new Error('Not enough bonusPoints');
+        }
+        else {
+            throw new Error('payMethod not supported: ' + orderInfo.payMethod);
+        }
+    }
+
+    _checkOrderMethod(orderInfo) {
+        if (orderInfo.orderMethod != "web") {
+            throw new Error('Order method not supported: ' + orderInfo.orderMethod);
+        }
     }
 }
