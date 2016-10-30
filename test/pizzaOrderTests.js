@@ -216,4 +216,47 @@ suite('PizzaOrderCalculator tests', function () {
 
     });
 
+    suite('payOrder method', function () {
+        let orderStub = {
+            items: [{name: 'meat pizza', price: 500}],
+            totalPrice: 500,
+            bonusPoints: 500 * 0.05,
+            payMethod: 'roubles',
+            orderMethod: 'web'
+        };
+
+        suite('when client pay successful', function () {
+            let clientStub = {
+                tryPay: function () {
+                    return true;
+                }
+            };
+
+            test('payment successful', function () {
+                let pizzaOrderCalculator = new PizzaOrderCalculator();
+
+                let payment = pizzaOrderCalculator.payOrder(clientStub, orderStub);
+
+                assert.equal(true, payment.paymentSuccessful)
+
+            });
+        });
+
+        suite('when client pay NON-successful', function () {
+            let clientStub = {
+                tryPay: function () {
+                    return false;
+                }
+            };
+
+            test('payment NON-successful', function () {
+                let pizzaOrderCalculator = new PizzaOrderCalculator();
+
+                let payment = pizzaOrderCalculator.payOrder(clientStub, orderStub);
+
+                assert.equal(false, payment.paymentSuccessful)
+
+            });
+        });
+    });
 });

@@ -14,11 +14,7 @@ export class Client {
         return 'ABCD';
     }
 
-    get roubles() {
-        return this._roubles;
-    }
-
-    get bonusPoints() {
-        return this._bonusPoints;
+    tryPay(amount, payMethod) {
+        return true;
     }
 }

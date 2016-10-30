@@ -7,7 +7,7 @@ export class PizzaOrderCalculator {
 
     formOrder(client, orderInfo) {
 
-        let outcome = {
+        let order = {
             items: [],
             totalPrice: 0,
             bonusPoints: 0,
@@ -17,29 +17,29 @@ export class PizzaOrderCalculator {
 
         for (let i = 0; i < orderInfo.items.length; i++) {
             let item = orderInfo.items[i];
-            outcome.items.push(item.name);
-            outcome.totalPrice += item.price;
+            order.items.push(item.name);
+            order.totalPrice += item.price;
         }
 
         if (client.isBirthday)
-            outcome.items.push('sweet pizza');
+            order.items.push('sweet pizza');
 
         if (client.promocode == 'ABCD')
-            outcome.totalPrice -= 100;
+            order.totalPrice -= 100;
 
         if (orderInfo.items.length == 2 && orderInfo.time > 10 && orderInfo.time < 16)
-            outcome.totalPrice *= 0.8;
+            order.totalPrice *= 0.8;
 
-        outcome.bonusPoints = outcome.totalPrice * 0.05;
+        order.bonusPoints = order.totalPrice * 0.05;
 
         this._checkOrderMethod(orderInfo);
-        outcome.orderMethod = orderInfo.orderMethod;
+        order.orderMethod = orderInfo.orderMethod;
 
         this._checkPayMethodAndMoney(orderInfo, client);
 
-        outcome.payMethod = orderInfo.payMethod;
+        order.payMethod = orderInfo.payMethod;
 
-        return outcome;
+        return order;
     }
 
     _checkPayMethodAndMoney(orderInfo, client) {
@@ -60,5 +60,15 @@ export class PizzaOrderCalculator {
         if (orderInfo.orderMethod != "web") {
             throw new Error('Order method not supported: ' + orderInfo.orderMethod);
         }
-    }
+    };
+
+    payOrder(client, order) {
+        let paySuccesful = client.tryPay(order.totalPrice, order.payMethod);
+
+        let payment = {
+            paymentSuccessful: paySuccesful
+        };
+
+        return payment;
+    };
 }
