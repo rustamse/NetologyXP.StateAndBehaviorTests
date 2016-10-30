@@ -40,4 +40,26 @@ suite('Counter Strike Bomb tests', function () {
         });
     });
 
+    suite('when try plant bomb in second time', function () {
+        test('match get notification about try plant in second time', function () {
+
+            let match = new Match();
+            let matchMock = sinon.mock(match);
+            matchMock.expects('notifyAboutTryPlantBombInSecondTime')
+                .once();
+
+            let bomb = new Bomb(match);
+            bomb.plant();
+
+            try {
+                // planting in second time.
+                bomb.plant();
+            }
+            catch (ex) {
+            }
+
+            matchMock.verify();
+        });
+    });
+
 });

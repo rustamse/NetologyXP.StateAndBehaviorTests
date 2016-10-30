@@ -11,4 +11,8 @@ export class Match {
     notifyAboutCounterTerroristWin() {
 
     }
+
+    notifyAboutTryPlantBombInSecondTime() {
+
+    }
 }
